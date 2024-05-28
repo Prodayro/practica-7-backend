@@ -1,13 +1,17 @@
 console.log('hola mundo con node JS')
 
-// forma antigua para llamar libreria
-// const express= requiere ('express')
+    // forma antigua para llamar libreria
+    // const express= requiere ('express')
 
-//forma actual con ECMAScrips 6 Llamar Librerias
+    //forma actual con ECMAScrips 6 Llamar Librerias
 import express from 'express'
+import bodyParser from 'body-parser'
 
-const app = express()
-const port = 3000
+    const app = express()
+    const port = 3000
+
+    app.use(bodyParser.json())
+    
 //---------- Endpoint ----------
 // con 'get le indicamos que nuestra API acepta
 // el metodo GET.
@@ -22,10 +26,10 @@ const port = 3000
 
 app.get('/api/v1/usuarios', (req, res) => {
 
-
-// const respuesta ={
-//      mensaje: "hola"
-// }
+    console.log(req.query)
+    // const respuesta ={
+    //mensaje: "hola"
+    // }
     // res.json(respueta)
 
     res.json({
@@ -46,6 +50,8 @@ app.get('/api/v1/usuarios/:cedula', (req, res)=> {
 
 //post: crear datos
 app.post('/api/v1/usuarios', (req, res) =>{
+
+    console.log(req.body)
 
     res.json({
         mensaje: 'usuario guardado'
@@ -82,9 +88,6 @@ app.delete('/api/v1/usuarios/:cedula', (req, res) => {
     })
 })
  
-
-
-
 //Le indicamos e nuestra API que empiece a escuchar peticiones
 // en el puerto 3000 y cuando se encienda nos muestra el mensaje
 // que hay en el console.log
