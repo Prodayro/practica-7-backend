@@ -6,6 +6,7 @@ console.log('hola mundo con node JS')
     //forma actual con ECMAScrips 6 Llamar Librerias
 import express from 'express'
 import bodyParser from 'body-parser'
+import client from './db.js'
 
     const app = express()
     const port = 3000
@@ -24,9 +25,16 @@ import bodyParser from 'body-parser'
 // - res: response o la respuesta
 
 
-app.get('/api/v1/usuarios', (req, res) => {
+app.get('/api/v1/usuarios', async (req, res) => {
 
-    console.log(req.query)
+    await client.connect()
+    
+    const db = client.db('sample_mflix')
+    const users = db.collection('users')
+
+   const listaUsuarios = await users.find({}).toArray()
+    console.log(listaUsuarios)
+    
     // const respuesta ={
     //mensaje: "hola"
     // }
