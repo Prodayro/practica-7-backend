@@ -27,13 +27,23 @@ import client from './db.js'
 
 app.get('/api/v1/usuarios', async (req, res) => {
 
+    //1. conectarnos a la base de datos
     await client.connect()
     
-    const db = client.db('sample_mflix')
-    const users = db.collection('users')
+    //2. seleccionar la base de datos que vamos a utilizar
+    const dbSampleMflix = client.db('sample-mflix')
+    //const db = client.db('sample_mflix')
 
-   const listaUsuarios = await users.find({}).toArray()
-    console.log(listaUsuarios)
+    //3. seleccionar la coleccion
+    const usersCollection = dbSampleMflix.collection('users')
+
+    //4. hacer la consulta -> query
+   const userlist = await usersCollection.find({}).toArray()
+    console.log(userlist)
+
+    //5. cerrar la coneccion a la db
+    await client.close()
+
     
     // const respuesta ={
     //mensaje: "hola"
@@ -42,10 +52,11 @@ app.get('/api/v1/usuarios', async (req, res) => {
 
     res.json({
         mensaje: 'lista de usuarios',
+        data: userlist
     })
 })
 
-app.get('/api/v1/usuarios/:cedula', (req, res)=> {
+app.get('/api/v1/usuarios/:cedula', async (req, res)=> {
 
     console.log(req.params)
     const cedula = req.params.cedula
@@ -57,9 +68,30 @@ app.get('/api/v1/usuarios/:cedula', (req, res)=> {
 })
 
 //post: crear datos
-app.post('/api/v1/usuarios', (req, res) =>{
+app.post('/api/v1/usuarios', async (req, res) =>{
 
     console.log(req.body)
+    const userData = req.body
+
+     //1. conectarnos a la base de datos
+     await client.connect()
+    
+     //2. seleccionar la base de datos que vamos a utilizar
+     const dbSampleMflix = client.db('sample-mflix')
+     //const db = client.db('sample_mflix')
+ 
+     //3. seleccionar la coleccion
+     const usersCollection = dbSampleMflix.collection('users')
+
+     //4. almacenar un usuario
+     await userCollection.insertOne({
+        nombre: userData.nombre,
+        apellido: userData.apellido,
+        edad: userData.edad
+     })
+
+    //5. cerrar la coneccion a la db
+    await client.close()
 
     res.json({
         mensaje: 'usuario guardado'
