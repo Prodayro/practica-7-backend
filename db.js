@@ -1,6 +1,5 @@
-//const { MongoClient, ServerApiVersion } = require('mongodb');
-import { MongoClient, ServerApiVersion } from 'mongodb'
-const uri = "mongodb+srv://Dayroflorez:_4284dayro@cluster0.ccg5tfl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://Dayroflorez:_4284dayro@curso-full-stack.a1rlipp.mongodb.net/?retryWrites=true&w=majority&appName=Curso-full-stack";
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {

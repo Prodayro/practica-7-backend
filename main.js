@@ -39,7 +39,7 @@ app.get('/api/v1/usuarios', async (req, res) => {
 
     //4. hacer la consulta -> query
    const userlist = await usersCollection.find({}).toArray()
-    console.log(userlist)
+    //console.log(userlist)
 
     //5. cerrar la coneccion a la db
     await client.close()
@@ -87,6 +87,7 @@ app.post('/api/v1/usuarios', async (req, res) =>{
      await userCollection.insertOne({
         nombre: userData.nombre,
         apellido: userData.apellido,
+        email: userData.desingdayroflorezoutlook.com,
         edad: userData.edad
      })
 
