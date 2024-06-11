@@ -7,6 +7,7 @@ console.log('hola mundo con node JS')
 import express from 'express'
 import bodyParser from 'body-parser'
 import client from './db.js'
+import { ObjectId } from 'mongodb'
 
     const app = express()
     const port = 3000
@@ -56,13 +57,35 @@ app.get('/api/v1/usuarios', async (req, res) => {
     })
 })
 
-app.get('/api/v1/usuarios/:cedula', async (req, res)=> {
+app.get('/api/v1/usuarios/:id', async (req, res)=> {
 
     console.log(req.params)
-    const cedula = req.params.cedula
+    let id = req.params.id
+
+     //1. conectarnos a la base de datos
+     await client.connect()
+    
+     //2. seleccionar la base de datos que vamos a utilizar
+     const dbSampleMflix = client.db('sample-mflix')
+     //const db = client.db('sample_mflix')
+ 
+     //3. seleccionar la coleccion
+     const usersCollection = dbSampleMflix.collection('users')
+
+     id = new ObjectId(id)
+
+     //4. consulta
+
+     const user = await usersCollection.findOne({
+        _id: id
+     })
+
+     //5. cerrar la coneccion
+     await client.close()
 
     res.json({
-        mensaje: `usuario obtenido con la cedula: ${cedula}`
+        mensaje: `usuario obtenido con el id: ${id}`,
+        data: user
     })
 
 })
@@ -100,12 +123,36 @@ app.post('/api/v1/usuarios', async (req, res) =>{
 })
 
 // put: actualizar todos los datos de un elemento
-app.put('/api/v1/usuarios/:cedula', (req, res)=> {
+app.put('/api/v1/usuarios/:id', async (req, res)=> {
 
-    const cedula = req.params.cedula
+    let id = req.params.id
+    const userData = req.body
+
+     //1. conectarnos a la base de datos
+     await client.connect()
+    
+     //2. seleccionar la base de datos que vamos a utilizar
+     const dbSampleMflix = client.db('sample-mflix')
+     //const db = client.db('sample_mflix')
+ 
+     //3. seleccionar la coleccion
+     const usersCollection = dbSampleMflix.collection('users')
+     
+     id = new ObjectId(id)
+     //4.realizar consulta a la DB
+     await usersCollection.updateOne(
+        {_id: id},
+        {
+            $set:{
+                name: userData.name
+            }
+        }
+     )
+     //5.cerrar la conexion
+     await client.close()
 
     res.json({
-        mensaje:`usuario con cedula ${cedula} actualizado`
+        mensaje:`usuario con id ${id} actualizado`
     })
     
 })
@@ -117,15 +164,34 @@ app.patch('/api/v1/usuarios/:cedula', (req, res) => {
     const cedula = req.params.cedula
 
     res.json({
-        mensaje:`edad del usuario con cedula ${cedula} actualizado`
+        mensaje:`edad del usuario con cedula ${id} actualizado`
     })
 })
 
-app.delete('/api/v1/usuarios/:cedula', (req, res) => {
+app.delete('/api/v1/usuarios/:id', async (req, res) => {
 
-    const cedula = req.params.cedula
+    let id = req.params.id
+
+     //1. conectarnos a la base de datos
+     await client.connect()
+    
+     //2. seleccionar la base de datos que vamos a utilizar
+     const dbSampleMflix = client.db('sample-mflix')
+     //const db = client.db('sample_mflix')
+ 
+     //3. seleccionar la coleccion
+     const usersCollection = dbSampleMflix.collection('users')
+
+     id = new ObjectId(id)
+     //4. realizar la consulta
+     await userCollection.deleteOne({
+        _id: id
+     })
+
+     await client.close()
+
     res.json({
-        mensaje:`usario con cedula ${cedula} eliminado`
+        mensaje:`usario con id ${id} eliminado`
     })
 })
  
